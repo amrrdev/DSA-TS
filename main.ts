@@ -3,7 +3,9 @@ interface ILinkedList<T> {
     insertLast(data: T): void;
     insertAtPosition(position: number, data: T): void;
     search(data: T): boolean;
-    // delete(data: T): void;
+    delete(data: T): void;
+    deleteFirst(): void;
+    deleteLast(): void;
     print(): void;
 }
 class LinkedListNode<T> {
@@ -69,10 +71,64 @@ class LinkedList<T> implements ILinkedList<T> {
             current = current!.next;
         }
 
-        if (!current) return false;
+        if (current === null) return false;
         return true;
     }
 
+    deleteFirst(): void {
+        if (this.length === 0) {
+            throw new Error("Empty Linked List");
+        } else if (this.length === 1) {
+            this.head = null;
+            this.tail = null;
+        } else {
+            this.head = this.head!.next;
+        }
+        this.length--;
+    }
+
+    deleteLast(): void {
+        if (this.length === 0) {
+            throw new Error("Empty Linked List");
+        }
+
+        if (this.length === 1) {
+            this.head = null;
+            this.tail = null;
+        } else {
+            let current = this.head;
+            while (current !== null && current.next !== this.tail) {
+                current = current.next;
+            }
+            this.tail = current;
+            this.tail!.next = null;
+        }
+        this.length--;
+    }
+
+    delete(data: T): void {
+        if (this.length === 0) {
+            throw new Error("Empty linkedlist");
+        }
+        let current = this.head;
+        let previous: LinkedListNode<T> | null = null;
+        while (current !== null && current.data !== data) {
+            previous = current;
+            current = current.next;
+        }
+        if (current === null) {
+            throw new Error("Not found");
+        }
+
+        if (current === this.head) {
+            this.deleteFirst();
+        } else if (current === this.tail) {
+            this.deleteLast();
+        } else {
+            previous!.next = current.next;
+        }
+        this.length--;
+    }
     print(): void {
         let current = this.head;
         while (current) {
@@ -91,4 +147,7 @@ myLinkedList.insertFirst("5");
 myLinkedList.print();
 myLinkedList.insertAtPosition(1, "7");
 myLinkedList.print();
-console.log(myLinkedList.search("51"));
+myLinkedList.deleteFirst();
+myLinkedList.print();
+myLinkedList.deleteLast();
+myLinkedList.print();
