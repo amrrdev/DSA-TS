@@ -1,6 +1,7 @@
 interface ILinkedList<T> {
     insertFirst(data: T): void;
     insertLast(data: T): void;
+    insertAtPosition(position: number, data: T): void;
     print(): void;
 }
 class LinkedListNode<T> {
@@ -40,6 +41,24 @@ class LinkedList<T> implements ILinkedList<T> {
         this.length++;
     }
 
+    insertAtPosition(position: number, data: T): void {
+        if (position < 0 || position > this.length) {
+            throw new Error("Invalid Position");
+        }
+        if (position === 0) this.insertFirst(data);
+        else if (position === this.length) this.insertLast(data);
+        else {
+            const newNode = new LinkedListNode<T>(data);
+            let current = this.head;
+            for (let i = 0; i < position - 1; i++) {
+                current = current!.next;
+            }
+            newNode.next = current!.next;
+            current!.next = newNode;
+            this.length++;
+        }
+    }
+
     print(): void {
         let current = this.head;
         while (current) {
@@ -55,4 +74,6 @@ myLinkedList.insertLast("10");
 myLinkedList.insertLast("20");
 myLinkedList.print();
 myLinkedList.insertFirst("5");
+myLinkedList.print();
+myLinkedList.insertAtPosition(1, "7");
 myLinkedList.print();
